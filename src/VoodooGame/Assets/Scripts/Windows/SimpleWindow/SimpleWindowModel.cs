@@ -7,16 +7,12 @@ namespace Windows.SimpleWindow
 {
     public class SimpleWindowModel : WindowModel
     {
-        public ReactiveProperty<ViewState> State =>  
+        public ReactiveProperty<ViewState> State => new ReactiveProperty<ViewState>();
         public Layer Layer { get; set; }
-        
-        public override void SetParameters(IWindowParameters parameters)
+
+        public override void Dispose()
         {
             
-        }
-        
-        public void Dispose()
-        {
         }
     }
 }

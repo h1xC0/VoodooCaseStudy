@@ -2,7 +2,7 @@ using Systems.CommandSystem;
 
 namespace Signals
 {
-    public class LoadGameplaySignal : ISignal
+    public class LoadSceneSignal : ISignal
     {
     }
 }

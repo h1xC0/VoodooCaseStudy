@@ -2,7 +2,7 @@
 
 namespace Signals
 {
-    public class UnloadLevelSignal : ISignal
+    public class UnloadSceneSignal : ISignal
     {
         
     }

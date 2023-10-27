@@ -1,12 +1,10 @@
-using Core.WindowSystem.MVP;
+using Core.WindowSystem;
+using Core.WindowSystem.Layers;
 
-namespace Windows
+namespace Windows.SimpleWindow
 {
-    public class SimpleWindowPresenter : Presenter<SimpleWindowView, SimpleWindowModel>
+    [ViewLayer(ViewLayer.Screen)]
+    public class SimpleWindowPresenter : WindowPresenter
     {
-        public SimpleWindowPresenter(SimpleWindowView viewContract, SimpleWindowModel modelContract) : base(viewContract, modelContract)
-        {
-            
-        }
     }
 }

@@ -1,5 +1,4 @@
 ﻿using Core.WindowSystem;
-using Core.WindowSystem.Layers;
 using Services.ResourceProvider;
 
 namespace Windows.SimpleWindow

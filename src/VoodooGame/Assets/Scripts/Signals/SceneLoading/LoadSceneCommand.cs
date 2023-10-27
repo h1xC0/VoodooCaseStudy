@@ -1,6 +1,7 @@
 using Services.Transitions;
 using Systems.CommandSystem;
 using Systems.CommandSystem.Payloads;
+using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 using Zenject;
@@ -30,7 +31,7 @@ namespace Commands
                 Release();
                 return;
             }
-
+            
             var loadSceneOperation = _sceneLoader.LoadSceneAsync(scene.Info.Name, LoadSceneMode.Additive, null, LoadSceneRelationship.Child);
             loadSceneOperation.completed += ReleaseCommand;
         }
