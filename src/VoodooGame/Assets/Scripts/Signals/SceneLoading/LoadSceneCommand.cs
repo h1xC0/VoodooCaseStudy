@@ -1,12 +1,12 @@
+using Constants;
+using Payloads;
 using Services.Transitions;
 using Systems.CommandSystem;
-using Systems.CommandSystem.Payloads;
-using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 using Zenject;
 
-namespace Commands
+namespace Signals.SceneLoading
 {
     public class LoadSceneCommand : Command
     {
@@ -23,22 +23,24 @@ namespace Commands
         {
             Retain();
 
-            _sceneTransitionService.FadeOut();
-
             var scene = payload as SceneNamePayload;
+
             if (scene is null)
             {
                 Release();
                 return;
             }
             
-            var loadSceneOperation = _sceneLoader.LoadSceneAsync(scene.Info.Name, LoadSceneMode.Additive, null, LoadSceneRelationship.Child);
+            var loadSceneOperation = _sceneLoader.LoadSceneAsync(scene.SceneInfoLoad.Name, LoadSceneMode.Additive, null, LoadSceneRelationship.Child);
             loadSceneOperation.completed += ReleaseCommand;
         }
 
         private void ReleaseCommand(AsyncOperation operation)
         {
             operation.completed -= ReleaseCommand;
+
+            _sceneTransitionService.FadeOut();
+
             Release();
         }
     }

@@ -5,12 +5,12 @@ using Zenject;
 
 namespace Core.WindowSystem.MVP
 {
-    public abstract class Presenter<TViewContract, TModelContract> : IPresenter
+    public class Presenter<TViewContract, TModelContract> : IPresenter
         where TViewContract : IView
         where TModelContract : class, IModel
     {
-        protected IView View { get; set; }
-        protected IModel Model { get; private set; }
+        public TViewContract View { get; set; }
+        public TModelContract Model { get; private set; }
         protected CompositeDisposable CompositeDisposable { get; set; }
 
         [Inject] protected IWindowManager WindowManager { get; private set; }
@@ -24,14 +24,14 @@ namespace Core.WindowSystem.MVP
         public ViewState State => Model.State.Value;
         public bool IsOpen => Model.State.Value == ViewState.Open;
         
-        public void Initialize(IView viewContract, IModel modelContract)
+        public Presenter(TViewContract viewContract, TModelContract modelContract)
         {
             View = viewContract;
             Model = modelContract;
             CompositeDisposable = new CompositeDisposable();
             
             View.Initialize();
-            View.SetupLayer(modelContract);
+            AddDisposable(View);
         }
 
         public void AddDisposable(IDisposable disposable)

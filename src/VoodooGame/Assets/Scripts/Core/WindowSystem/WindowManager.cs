@@ -35,7 +35,7 @@ namespace Core.WindowSystem
         
         private Canvas _mainCanvas;
 
-        private Canvas MainCanvas
+        public Canvas MainCanvas
         {
             get
             {
@@ -46,12 +46,6 @@ namespace Core.WindowSystem
 
                 return _mainCanvas;
             }
-        }
-
-        public bool UiEnabled
-        {
-            get => MainCanvas.worldCamera.enabled;
-            set => MainCanvas.worldCamera.enabled = value;
         }
 
         public WindowManager(IWindowManagerFactory windowManagerFactory, IWindowSystemSettings windowSystemSettings)
@@ -91,17 +85,38 @@ namespace Core.WindowSystem
             }
         }
 
-        public void Close(IPresenter windowController, bool executeImmediately = false)
+        public void Close(IPresenter windowPresenter, bool executeImmediately = false)
         {
-            if (windowController.State == ViewState.Close)
+            if (windowPresenter.State == ViewState.Close)
             {
                 return;
             }
-            
-            if (_windowsOpenData.TryGetValue(windowController, out IWindowOpenInfo windowOpenInfo))
+            if (_windowsOpenData.TryGetValue(windowPresenter, out IWindowOpenInfo windowOpenInfo))
             {
-                Debug.Log($"Try Close ({windowController.GetType()}) with Data {windowOpenInfo.Data}");
+                Debug.Log($"Try Close ({windowPresenter.GetType()}) with Data {windowOpenInfo.Data}");
             }
+            
+            if (_windowsData.TryGetValue(windowOpenInfo.Data, out var info))
+            {
+                var window = info.Presenter;
+                if (window != null && _windowsOpenData.ContainsKey(window))
+                {
+                    _windowsOpenData.Remove(info.Presenter);
+                    var manipulation = (IWindowManipulation)window;
+                    manipulation.Close();
+                }
+
+                _windowsData.Remove(windowOpenInfo.Data);
+            }
+        }
+
+        public void ClearCanvas()
+        {
+            foreach (var openWindow in _windowsOpenData)
+            {
+                openWindow.Value.WindowManipulation.Close();
+            }
+            AllWindowsClosedEvent?.Invoke();
         }
 
         public IWindowOpenInfo GetActiveWindow(Layer layer)
@@ -195,7 +210,7 @@ namespace Core.WindowSystem
         }
 
         public TPresenter Open<TPresenter>(IWindowParameters parameters, bool enableBlocker)
-            where TPresenter : class, IPresenter, new()
+            where TPresenter : class, IPresenter
         {
             _presentersLayers.TryGetValue(typeof(TPresenter), out Layer layer);
 
@@ -220,7 +235,7 @@ namespace Core.WindowSystem
         }
 
         private IWindowOpenInfo CreateWindow<TPresenter>(IWindowParameters parameters, bool enableBlocker)
-            where TPresenter : class, IPresenter, new()
+            where TPresenter : class, IPresenter
         {
             var (view, model) = CreateViewModel<TPresenter>(MainCanvas.transform);
 

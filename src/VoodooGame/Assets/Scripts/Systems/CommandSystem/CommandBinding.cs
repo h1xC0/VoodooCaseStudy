@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
+using Payloads;
 using Systems.Binders;
-using Systems.CommandSystem.Payloads;
 using Zenject;
 
 namespace Systems.CommandSystem

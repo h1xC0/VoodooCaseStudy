@@ -14,5 +14,6 @@ namespace Services.AnimationService
         Sequence SetupMoveAnimation(Transform target, CanvasGroup canvasGroup, float distance, float fade,
             TweenCallback callback);
         Sequence SetupShakeSequence(Transform target, float animationSpeed, float strength, int vibrato);
+        Sequence SetupFloatInOutAnimation(CanvasGroup target, float alpha, float animationSpeed);
     }
 }

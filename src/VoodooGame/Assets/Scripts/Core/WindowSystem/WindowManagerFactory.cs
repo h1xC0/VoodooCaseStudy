@@ -60,13 +60,10 @@ namespace Core.WindowSystem
         }
 
         public TPresenter CreateWindowPresenter<TPresenter>(IWindowView windowView, IWindowModel windowModel, IWindowParameters parameters)
-            where TPresenter : class, IPresenter, new()
+            where TPresenter : class, IPresenter
         {
-            var windowPresenter = new TPresenter();
-            windowPresenter.Initialize(windowView, windowModel);
-            // ((IWindowManipulation)windowPresenter).ApplyInputData(parameters);
-            DiContainer.Inject(windowPresenter);
-            return windowPresenter;
+            var presenter = DiContainer.Instantiate<TPresenter>(new object[]{windowView, windowModel});
+            return presenter;
         }
 
         public Button CreateOutsideAreaButton(IWindowView windowView)

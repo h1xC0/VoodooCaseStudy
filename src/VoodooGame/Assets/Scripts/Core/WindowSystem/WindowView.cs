@@ -103,6 +103,7 @@ namespace Core.WindowSystem
 
         protected virtual void OnDisposeEvent()
         {
+            Destroy(gameObject);
         }
 
         private void StateChangedHandler(ViewState state)

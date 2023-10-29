@@ -3,7 +3,7 @@ using Core.WindowSystem.Layers;
 
 namespace Core.WindowSystem.MVP
 {
-    public interface IPresenter : IPresenterInitializable<IView, IModel>, IDisposable
+    public interface IPresenter : IDisposable
     {
         Layer Layer { get; set; }
 

@@ -17,7 +17,7 @@ namespace Core.WindowSystem
             set
             {
                 _window = value;
-                // WindowManipulation = (IWindowManipulation) _window;
+                WindowManipulation = (IWindowManipulation) _window;
             }
         }
         

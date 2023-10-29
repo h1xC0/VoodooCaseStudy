@@ -4,7 +4,7 @@ using UniRx;
 
 namespace Core.WindowSystem.MVP
 {
-    public interface IModel : IDisposable
+    public interface IModel
     {
         ReactiveProperty<ViewState> State { get; }
         Layer Layer { get; set; }

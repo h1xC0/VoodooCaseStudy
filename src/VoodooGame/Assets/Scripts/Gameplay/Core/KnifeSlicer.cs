@@ -1,4 +1,7 @@
 ﻿using System;
+using System.Threading.Tasks;
+using Enums;
+using Services.LevelProgressionService;
 using UnityEngine;
 
 namespace Gameplay.Core
@@ -8,20 +11,15 @@ namespace Gameplay.Core
     {
         [SerializeField] private Collider _knifeCutter;
         [SerializeField] private LayerMask _layerMask;
+        [SerializeField] private LayerMask _groundLayerMask;
 
-        private void OnCollisionEnter(Collision collision)
+        public event Action<ISliced> SliceObjectEvent;
+        public event Action KnifeReachedGroundEvent;
+
+        private ILevelProgressionService _levelProgressionService;
+        public void Initialize(ILevelProgressionService levelProgressionService)
         {
-            var bounds = _knifeCutter.bounds;
-            var colliders = Physics.OverlapBox(bounds.center, bounds.extents, Quaternion.identity, _layerMask);
-
-            foreach (var collider1 in colliders)
-            {
-                collider1.TryGetComponent(out ISliced sliceObject);
-                if (sliceObject != null)
-                {
-                    sliceObject.Slice();
-                }
-            }
+            _levelProgressionService = levelProgressionService;
         }
 
         private void OnTriggerEnter(Collider other)
@@ -29,14 +27,29 @@ namespace Gameplay.Core
             var bounds = _knifeCutter.bounds;
             var colliders = Physics.OverlapBox(bounds.center, bounds.extents, Quaternion.identity, _layerMask);
 
-            foreach (var collider1 in colliders)
+            foreach (var overlapCollider in colliders)
             {
-                collider1.TryGetComponent(out ISliced sliceObject);
-                if (sliceObject != null)
-                {
-                    sliceObject.Slice();
-                }
+                overlapCollider.TryGetComponent(out ISliced sliceObject);
+                
+                if (sliceObject == null) continue;
+                
+                sliceObject.Slice();
+                SliceObjectEvent?.Invoke(sliceObject);
             }
+
+            if (other.gameObject.layer == _groundLayerMask)
+            {
+                KnifeReachedGroundEvent?.Invoke();
+            }
+        }
+
+        public async void SetCollider(bool flag, int delay = 0)
+        {
+            if (delay > 0)
+            {
+                await Task.Delay(delay);
+            }
+            _knifeCutter.enabled = flag;
         }
     }
 }

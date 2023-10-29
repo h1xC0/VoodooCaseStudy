@@ -15,7 +15,7 @@ namespace Core.WindowSystem
         GameObject GetForegroundBlocker();
 
         TPresenter CreateWindowPresenter<TPresenter>(IWindowView windowView, IWindowModel windowModel, IWindowParameters parameters)
-            where TPresenter : class, IPresenter, new();
+            where TPresenter : class, IPresenter;
         Button CreateOutsideAreaButton(IWindowView windowView);
     }
 }

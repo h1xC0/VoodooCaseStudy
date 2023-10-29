@@ -1,5 +1,5 @@
 ﻿using System;
-using Systems.CommandSystem.Payloads;
+using Payloads;
 
 namespace Systems.CommandSystem
 {

@@ -16,7 +16,7 @@ namespace Services.ResourceProvider
                 return resource;
             }
                 
-            throw new NullReferenceException("Resource wasn't found");
+            throw new NullReferenceException($"{typeof(TResource)} resource wasn't found");
         }
 
         public IEnumerable<TResource> LoadResources<TResource>(ResourceInfo resourceInfo)
@@ -29,7 +29,7 @@ namespace Services.ResourceProvider
                 return resources;
             }
 
-            throw new NullReferenceException("Resources weren't found");
+            throw new NullReferenceException($"{typeof(TResource)} resources weren't found");
         }
     }
 }

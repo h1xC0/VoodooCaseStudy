@@ -1,9 +1,9 @@
 using System;
+using Enums;
+using Extensions;
 using EzySlice;
 using UnityEngine;
-using UnityEngine.Serialization;
 using Zenject;
-using Plane = EzySlice.Plane;
 
 namespace Gameplay.Core
 {
@@ -11,8 +11,12 @@ namespace Gameplay.Core
     {
         public event Action<GameObject[]> SliceEvent;
         protected Vector3 SliceCenterPoint { get; set; }
-
         protected float SliceExplosionForce { get; set; }
+        public int PointValue { get; protected set; }
+        public IngredientType IngredientType { get; protected set; }
+
+        [SerializeField] private Material _crossSectionMaterial;
+
 
         [Inject]
         public virtual void Initialize()
@@ -24,8 +28,10 @@ namespace Gameplay.Core
 
         public GameObject[] Slice()
         {
-            var slicedParts = gameObject.SliceInstantiate(transform.position + SliceCenterPoint, Vector3.forward);
+            var slicedParts = gameObject.SliceInstantiate(transform.position + SliceCenterPoint, Vector3.forward, _crossSectionMaterial);
             SliceEvent?.Invoke(slicedParts);
+            
+            Vibration.VibratePredefined(Vibration.PredefinedEffect.EFFECT_TICK);
             
             foreach (var part in slicedParts)
             {
@@ -47,11 +53,13 @@ namespace Gameplay.Core
                 
             var meshCollider = slicedPiece.AddComponent<MeshCollider>();
             var rb = slicedPiece.AddComponent<Rigidbody>();
-                
+
             rb.interpolation = RigidbodyInterpolation.Interpolate;
             meshCollider.convex = true;
-            
+
             rb.AddExplosionForce(SliceExplosionForce, transform.position + SliceCenterPoint, 5, 1, ForceMode.Acceleration);
+            Destroy(slicedPiece, 5);
+            Destroy(gameObject, 8);
         }
         private void OnDrawGizmos()
         {

@@ -1,4 +1,5 @@
 using System;
+using Enums;
 using EzySlice;
 using UnityEngine;
 
@@ -8,5 +9,7 @@ namespace Gameplay.Core
     {
         event Action<GameObject[]> SliceEvent;
         GameObject[] Slice();
+        int PointValue { get; }
+        IngredientType IngredientType { get; }
     }
 }

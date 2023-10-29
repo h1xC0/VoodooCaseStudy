@@ -3,20 +3,19 @@ namespace Constants
     [System.Serializable]
     public class PlayerProgressionModel
     {
-        public int ResourcesCount;
+        public int MoneyCount;
         public int LastLevelIndex;
-        public string[] GiftSlots;
         
-        public PlayerProgressionModel(int resourcesCount, int lastLevelIndex, string[] giftSlots)
+        public PlayerProgressionModel(int moneyCount, int lastLevelIndex)
         {
-            ResourcesCount = resourcesCount;
+            MoneyCount = moneyCount;
             LastLevelIndex = lastLevelIndex;
-            GiftSlots = giftSlots;
         }
 
         public PlayerProgressionModel()
         {
-            
+            MoneyCount = 0;
+            LastLevelIndex = 0;
         }
     }
 }

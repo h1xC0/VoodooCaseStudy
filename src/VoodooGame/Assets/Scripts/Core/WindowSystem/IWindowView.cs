@@ -12,5 +12,6 @@ namespace Core.WindowSystem
         event Action ViewDestroyedEvent;
         
         event Action ShowEndEvent;
+
     }
 }

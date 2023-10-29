@@ -1,16 +1,25 @@
+using Payloads;
+using Services.Transitions;
 using Systems.CommandSystem;
-using Systems.CommandSystem.Payloads;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
-namespace Commands
+namespace Signals.SceneLoading
 {
     public class UnloadSceneCommand : Command
     {
+        private readonly ISceneTransitionService _sceneTransitionService;
+
+        public UnloadSceneCommand(ISceneTransitionService sceneTransitionService)
+        {
+            _sceneTransitionService = sceneTransitionService;
+        }
 
         protected override void Execute(ICommandPayload payload)
         {
             Retain();
+            
+            _sceneTransitionService.FadeIn();
             
             var scene = payload as SceneNamePayload;
             if (scene is null)
@@ -19,7 +28,7 @@ namespace Commands
                 return;
             }
             
-            var unloadSceneOperation = SceneManager.UnloadSceneAsync(scene.Info.Name);
+            var unloadSceneOperation = SceneManager.UnloadSceneAsync(scene.SceneInfoUnload.Name);
             unloadSceneOperation.completed += ReleaseCommand;
             
             Release();

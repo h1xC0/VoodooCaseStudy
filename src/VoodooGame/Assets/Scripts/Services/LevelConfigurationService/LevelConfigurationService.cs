@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using Constants;
 using Core.Gameplay.Levels;
 using Services.ResourceProvider;
 using UnityEngine;
@@ -12,9 +13,7 @@ namespace Services.LevelConfigurationService
         public int TotalLevels => _levelConfigurations.Count;
         
         private List<LevelConfiguration> _levelConfigurations = new();
-
         private bool _levelEnded;
-
         private readonly IResourceProviderService _resourcesProvider;
 
         public LevelConfigurationService(IResourceProviderService resourcesProvider)
@@ -39,29 +38,13 @@ namespace Services.LevelConfigurationService
         private bool LoadLevelConfigurations()
         {
             // Load Initial Config
-            /*_levelConfigurations = _resourcesProvider
-                .LoadResources<LevelConfiguration>(ResourceNames.Levels)
-                .ToList();
-            
-            if (_levelConfigurations.Count == 0) return false;
+             _levelConfigurations = _resourcesProvider
+                 .LoadResources<LevelConfiguration>(ResourceNames.Levels)
+                 .ToList();
+             
+             if (_levelConfigurations.Count == 0) return false;
 
-            _giftRecipes = _resourcesProvider
-                .LoadResource<GiftRecipes>(ResourceNames.GiftRecipes);
-
-            _rewards = _resourcesProvider
-                .LoadResources<Rewards>(ResourceNames.Rewards)
-                .FirstOrDefault();
-
-            _giftSlots = _resourcesProvider
-                .LoadResources<GiftSlot>(ResourceNames.GiftSlots)
-                .ToArray();
-
-            if (_giftSlots == null || _rewards == null || _giftRecipes == null)
-            {
-                Debug.LogError("Some resources wasn't load!");
-            }*/
-            
-            return true;
+             return true;
         }
 
         public void Dispose()

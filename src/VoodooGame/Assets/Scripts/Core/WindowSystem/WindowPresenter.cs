@@ -3,13 +3,20 @@ using Core.WindowSystem.MVP;
 
 namespace Core.WindowSystem
 {
-    public class WindowPresenter : Presenter<IWindowView, IWindowModel>, IWindowManipulation
+    public class WindowPresenter<TView, TModel> : Presenter<TView, TModel>, IWindowManipulation
+    where TView : IWindowView
+    where TModel : class, IWindowModel
     {
         public event Action<IPresenter> OnOpenEvent;
         public event Action<IPresenter> OnCloseEvent;
         public event Action<IPresenter, ViewState> OnCloseCompleteEvent;
         public event Action<IPresenter> OnOpenCompleteEvent;
-        
+
+        public WindowPresenter(TView viewContract, TModel modelContract) : base(viewContract, modelContract)
+        {
+            View.Initialize();
+        }
+
         public void Close()
         {
             WindowManager.Close(this);
@@ -30,11 +37,13 @@ namespace Core.WindowSystem
 
         void IWindowManipulation.Close()
         {
-            
+            SilentClose();
         }
         
         protected virtual void OnCloseWindow()
         {
+            CompositeDisposable.Add(this);
+            OnDispose();
         }
         
         protected virtual void OnOpen()

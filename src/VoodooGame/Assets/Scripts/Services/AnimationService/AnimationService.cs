@@ -56,6 +56,17 @@ namespace Services.AnimationService
             return sequence;
         }
 
+        public Sequence SetupFloatInOutAnimation(CanvasGroup target, float alpha, float animationSpeed)
+        {
+            var sequence = DOTween.Sequence(target);
+            sequence.SetTarget(target);
+            sequence.SetAutoKill();
+
+            sequence.Append(target.DOFade(alpha, animationSpeed));
+
+            return sequence;
+        }
+
         public Sequence SetupFloatingAnimation(Transform target, float amplitude, float duration)
         {
             var sequence = DOTween.Sequence(target);

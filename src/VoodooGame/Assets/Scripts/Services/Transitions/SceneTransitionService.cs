@@ -1,3 +1,4 @@
+using Constants;
 using DG.Tweening;
 using UnityEngine;
 
@@ -16,15 +17,27 @@ namespace Services.Transitions
 
         public void FadeIn()
         {
-            _canvasGroup.alpha = 1;
-            gameObject.SetActive(true);
+            _canvasGroup
+                .DOFade(1, AnimationConstants.AnimationSpeed)
+                .SetDelay(_fadeTime)
+                .OnComplete(() =>
+                {
+                    _canvasGroup.blocksRaycasts = true;
+                    _canvasGroup.interactable = true;
+                });
+            
         }
 
         public void FadeOut()
         {
             _canvasGroup
-                .DOFade(0, _fadeTime)
-                .OnComplete(() => gameObject.SetActive(false));
+                .DOFade(0, AnimationConstants.AnimationSpeed)
+                .SetDelay(_fadeTime)
+                .OnComplete(() =>
+                {
+                    _canvasGroup.blocksRaycasts = false;
+                    _canvasGroup.interactable = false;
+                });
         }
     }
 }

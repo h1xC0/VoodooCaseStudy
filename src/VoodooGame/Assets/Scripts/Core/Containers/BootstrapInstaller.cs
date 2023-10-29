@@ -1,14 +1,22 @@
-using Commands;
+using Windows.LevelStateWindow;
+using Windows.LevelStateWindow.Common;
+using Windows.PersistentWindow.Common;
+using Windows.SimpleWindow;
 using Constants;
 using Core.WindowSystem;
+using Payloads;
+using Services.AnimationService;
 using Services.EventBus;
+using Services.InputService;
 using Services.LevelConfigurationService;
+using Services.LevelProgressionService;
+using Services.PlayerProgression;
 using Services.ResourceProvider;
 using Services.SaveLoad;
 using Services.Transitions;
 using Signals;
+using Signals.SceneLoading;
 using Systems.CommandSystem;
-using Systems.CommandSystem.Payloads;
 using UnityEngine;
 using Zenject;
 
@@ -16,7 +24,6 @@ namespace Core.Containers
 {
     public class BootstrapInstaller : MonoInstaller
     {
-        
         [SerializeField] private SceneTransitionService _sceneTransitionService;
         
         public override void InstallBindings()
@@ -28,15 +35,21 @@ namespace Core.Containers
 
         public override void Start()
         {
+            var index = Container.Resolve<IPlayerProgressionService>().CurrentLevel.Value;
+            var levelToLoad = new SceneInfo($"Level {index + 1}", "LevelToLoad");
+
             Container
                 .Resolve<ICommandDispatcher>()
-                .Dispatch<LoadSceneSignal>(new SceneNamePayload(SceneNames.Gameplay));
+                .Dispatch<LoadSceneSignal>(new SceneNamePayload(levelToLoad, null));
         }
 
         private void BindInstallers()
         {
             Container.Install<CommandSystemInstaller>();
             Container.Install<WindowInstaller>();
+            
+            SimpleWindowInstaller.Install(Container);
+            PersistentWindowInstaller.Install(Container);
         }
 
         private void BindServices()
@@ -66,6 +79,23 @@ namespace Core.Containers
                 .BindInterfacesTo<LevelConfigurationService>()
                 .FromNew()
                 .AsSingle();
+
+            Container
+                .BindInterfacesTo<AnimationService>()
+                .FromNew()
+                .AsSingle();
+            
+            Container
+                .BindInterfacesTo<PlayerProgressionService>()
+                .FromNew()
+                .AsSingle()
+                .NonLazy();
+            
+            Container
+                .BindInterfacesTo<LevelProgressionService>()
+                .FromNew()
+                .AsSingle()
+                .NonLazy();
         }
 
         private void BindCommands(ICommandBinder commandBinder)
@@ -75,6 +105,6 @@ namespace Core.Containers
 
             commandBinder.Bind<UnloadSceneSignal>()
                 .To<UnloadSceneCommand>();
-        } 
+        }
     }
 }

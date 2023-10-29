@@ -17,6 +17,7 @@ namespace Windows.SimpleWindow
             _simpleWindowFactory = simpleWindowFactory;
         }
         
+        
         public void Initialize()
         {
             _windowRegister.Register<SimpleWindowPresenter>(delegate (Transform parent, Action<IWindowView, IWindowModel> action)

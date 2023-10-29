@@ -7,6 +7,6 @@ namespace Core.Gameplay.Levels
     public class LevelConfiguration : ScriptableObject, IResource
     {
         public int LevelNumber = 1;
-        public int Difficulty = 1;
+        public FoodRecipe LevelRecipe;
     }
 }
