@@ -68,13 +68,6 @@ namespace Core.WindowSystem
 
                 layer.Order = currentLayerOrder++;
             }
-            
-            //
-            // foreach (var settings in layersSettings)
-            // {
-            //     var layer = new Layer(settings);
-            //     _presentersLayers.Add(layer.GetType(), layer);
-            // }
         }
 
         public void Dispose()
@@ -168,22 +161,6 @@ namespace Core.WindowSystem
             }
 
             _viewModelCreators[type] = createMethod;
-        }
-
-        public void SetCanvasConfig(WindowSystemConfig config)
-        {
-            CanvasScaler canvasScaler = MainCanvas.GetComponent<CanvasScaler>();
-            canvasScaler.matchWidthOrHeight = config.CanvasScaler;
-            canvasScaler.screenMatchMode = config.ScreenMatchMode;
-            if (config.ReferenceResolution.HasValue)
-            {
-                canvasScaler.referenceResolution = config.ReferenceResolution.Value;
-            }
-
-            Camera camera = _mainCanvas.worldCamera;
-            camera.depth = config.Depth;
-
-            _backgroundBlocker.ApplyConfig(config.BlockerConfig);
         }
 
         public Layer GetLayer(string layerName)
